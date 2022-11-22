@@ -1,9 +1,11 @@
-import express, { Response } from 'express'
+import express from "express";
+import dotenv from "dotenv";
 
-const app = express()
+import connect from "./config/mongo.js";
 
-app.get("/", async (_, res: Response) => {
-    return res.status(200).json({ message: "work"})
-})
+dotenv.config();
+connect();
 
-app.listen(4000)
+const app = express();
+
+app.listen(process.env.PORT || 4000);
