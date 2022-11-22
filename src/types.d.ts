@@ -12,8 +12,7 @@ export type AddressT = {
   country: string;
 };
 
-export type InvoiceT = {
-  id: string;
+export type NewInvoice = {
   createdAt: string;
   paymentDue: string;
   description: string;
@@ -26,3 +25,7 @@ export type InvoiceT = {
   items: ItemT[];
   total: number;
 };
+
+export interface InvoiceT extends NewInvoice {
+  id: string;
+}

@@ -1,0 +1,26 @@
+openapi: 3.0.0
+info:
+  title: Invoices
+  description: Invoice app API
+  version: 0.1.9
+
+servers:
+  - url: https://folksoul-api.nika-nozadze.redberryinternship.ge/api
+    description: production server
+  - url: http://localhost:4000/api
+    description: local server
+
+paths:
+  /invoices:
+    get:
+      tags:
+        - Invoice
+      responses:
+        "200":
+          description: get all invoice
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string

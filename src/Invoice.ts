@@ -89,7 +89,10 @@ const InvoiceSchema = new Schema<InvoiceT>({
       required: true,
     },
   }),
-  items: [itemSchema],
+  items: {
+    type: [itemSchema],
+    required: true,
+  },
   total: {
     type: Schema.Types.Number,
     required: true,
