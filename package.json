@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "engines": {
+    "node": "14.X"
+  },
   "scripts": {
     "start": "node build/app.js",
     "build:watch": "babel src --out-dir build --extensions .ts --copy-files --watch",
