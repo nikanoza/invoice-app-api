@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 
-import invoiceSchema from "invoice-schema.js";
+import invoiceSchema from "./invoice-schema.js";
 import Invoice from "./Invoice.js";
 
-export const getInvoices = async (req: Request, res: Response) => {
+export const getInvoices = async (_: Request, res: Response) => {
   const data = await Invoice.find();
 
   return res.status(200).json(data);
@@ -13,7 +13,7 @@ export const getInvoices = async (req: Request, res: Response) => {
 export const createInvoice = async (req: Request, res: Response) => {
   const { body } = req;
 
-  const validator = invoiceSchema(body);
+  const validator = await invoiceSchema(body);
   const { value, error } = validator.validate(body);
 
   if (error) {

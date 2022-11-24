@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { AddressT, ItemT, NewInvoice } from "types";
 
-const invoiceSchema = (data: NewInvoice) => {
+const invoiceSchema = async (_: NewInvoice) => {
   return Joi.object<NewInvoice>({
     createdAt: Joi.string()
       .pattern(/^\d{4}[-]\d{2}[-]\d{2}$/)

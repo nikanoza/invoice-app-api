@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import bodyParser from "body-parser";
 
 import connect from "./config/mongo.js";
 import invoiceRouter from "./router.js";
@@ -10,6 +11,8 @@ dotenv.config();
 connect();
 
 const app = express();
+
+app.use(bodyParser.json());
 
 app.use("/api", cors(), invoiceRouter);
 app.use("/", ...swaggerMiddleware);

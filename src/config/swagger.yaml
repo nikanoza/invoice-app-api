@@ -24,3 +24,68 @@ paths:
                 type: array
                 items:
                   type: string
+    post:
+      tags:
+        - Invoice
+      requestBody:
+        description: add new invoice
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                createdAt:
+                  type: string
+                paymentDue:
+                  type: string
+                description:
+                  type: string
+                paymentTerms:
+                  type: number
+                clientName:
+                  type: string
+                clientEmail:
+                  type: string
+                status:
+                  type: string
+                senderAddress:
+                  type: object
+                  properties:
+                    street:
+                      type: string
+                    city:
+                      type: string
+                    postCode:
+                      type: string
+                    country:
+                      type: string
+                clientAddress:
+                  type: object
+                  properties:
+                    street:
+                      type: string
+                    city:
+                      type: string
+                    postCode:
+                      type: string
+                    country:
+                      type: string
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: number
+                      price:
+                        type: number
+                      total:
+                        type: number
+                total:
+                  type: number
+      responses:
+        "200":
+          description: new invoice add successfully
