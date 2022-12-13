@@ -1,13 +1,31 @@
 import { Request, Response } from "express";
+import { InvoiceT } from "types.js";
 import { v4 as uuidv4 } from "uuid";
 
 import invoiceSchema from "./invoice-schema.js";
 import Invoice from "./Invoice.js";
 
 export const getInvoices = async (_: Request, res: Response) => {
-  const data = await Invoice.find();
+  const data: InvoiceT[] = await Invoice.find();
 
-  return res.status(200).json(data);
+  const transformData = data.map((invoice: InvoiceT) => {
+    return {
+      id: invoice.id,
+      createdAt: invoice.createdAt,
+      paymentDue: invoice.paymentDue,
+      description: invoice.description,
+      paymentTerms: invoice.paymentTerms,
+      clientName: invoice.clientName,
+      clientEmail: invoice.clientEmail,
+      status: invoice.status,
+      senderAddress: invoice.senderAddress,
+      clientAddress: invoice.clientAddress,
+      items: invoice.items,
+      total: invoice.total,
+    };
+  });
+
+  return res.status(200).json(transformData);
 };
 
 export const createInvoice = async (req: Request, res: Response) => {
