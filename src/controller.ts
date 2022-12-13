@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { InvoiceT } from "types.js";
+import { AddressT, InvoiceT, ItemT } from "types.js";
 import { v4 as uuidv4 } from "uuid";
 
 import invoiceSchema from "./invoice-schema.js";
@@ -9,6 +9,28 @@ export const getInvoices = async (_: Request, res: Response) => {
   const data: InvoiceT[] = await Invoice.find();
 
   const transformData = data.map((invoice: InvoiceT) => {
+    const senderAddress: AddressT = {
+      street: invoice.senderAddress.street,
+      city: invoice.senderAddress.city,
+      postCode: invoice.senderAddress.postCode,
+      country: invoice.senderAddress.country,
+    };
+
+    const clientAddress: AddressT = {
+      street: invoice.clientAddress.street,
+      city: invoice.clientAddress.city,
+      postCode: invoice.clientAddress.postCode,
+      country: invoice.clientAddress.country,
+    };
+
+    const items = invoice.items.map((item: ItemT) => {
+      return {
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.total,
+      };
+    });
     return {
       id: invoice.id,
       createdAt: invoice.createdAt,
@@ -18,9 +40,9 @@ export const getInvoices = async (_: Request, res: Response) => {
       clientName: invoice.clientName,
       clientEmail: invoice.clientEmail,
       status: invoice.status,
-      senderAddress: invoice.senderAddress,
-      clientAddress: invoice.clientAddress,
-      items: invoice.items,
+      senderAddress: senderAddress,
+      clientAddress: clientAddress,
+      items: items,
       total: invoice.total,
     };
   });
