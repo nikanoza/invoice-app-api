@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
+import { generateId } from "./helpers.js";
 import { AddressT, InvoiceT, ItemT } from "types.js";
-import { v4 as uuidv4 } from "uuid";
-
 import invoiceSchema from "./invoice-schema.js";
 import Invoice from "./Invoice.js";
 
@@ -74,7 +73,7 @@ export const createInvoice = async (req: Request, res: Response) => {
     total,
   } = value;
 
-  const id = uuidv4();
+  const id = generateId();
 
   const newInvoice = {
     id,
@@ -104,4 +103,72 @@ export const createInvoice = async (req: Request, res: Response) => {
   await Invoice.create({ ...newInvoice });
 
   return res.status(201).json({ ...newInvoice });
+};
+
+export const updateInvoice = async (req: Request, res: Response) => {
+  const { params, body } = req;
+
+  const invoice = await Invoice.findOne({ id: params.id });
+
+  if (!invoice) {
+    return res
+      .status(422)
+      .json({ message: "there is no invoice with this id" });
+  }
+
+  const validator = await invoiceSchema(body);
+  const { value, error } = validator.validate(body);
+
+  if (error) {
+    return res.status(422).json(error.details);
+  }
+
+  const {
+    createdAt,
+    paymentDue,
+    description,
+    paymentTerms,
+    clientName,
+    clientEmail,
+    status,
+    senderAddress,
+    clientAddress,
+    items,
+    total,
+  } = value;
+
+  await Invoice.findOneAndUpdate(
+    { id: params.id },
+    {
+      createdAt,
+      paymentDue,
+      description,
+      paymentTerms,
+      clientName,
+      clientEmail,
+      status,
+      senderAddress,
+      clientAddress,
+      items,
+      total,
+    }
+  );
+
+  return res.status(200).json({ message: "invoice update successfully" });
+};
+
+export const deleteInvoice = async (req: Request, res: Response) => {
+  const { params } = req;
+
+  const invoice = await Invoice.findOne({ id: params.id });
+
+  if (!invoice) {
+    return res
+      .status(422)
+      .json({ message: "there is no invoice with this id" });
+  }
+
+  await Invoice.findOneAndDelete({ id: params.id });
+
+  return res.status(200).json({ message: "invoice removed successfully" });
 };
