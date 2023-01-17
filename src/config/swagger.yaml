@@ -173,3 +173,15 @@ paths:
       responses:
         "200":
           description: invoice removed successfully
+    get:
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+      tags:
+        - Invoice
+      responses:
+        "200":
+          description: invoice fetch successfully

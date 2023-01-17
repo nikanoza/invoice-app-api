@@ -49,6 +49,58 @@ export const getInvoices = async (_: Request, res: Response) => {
   return res.status(200).json(transformData);
 };
 
+export const getInvoice = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const invoice = await Invoice.findOne({ id });
+
+  if (!invoice) {
+    return res
+      .status(422)
+      .json({ message: "there is no invoice with this id" });
+  }
+
+  const senderAddress: AddressT = {
+    street: invoice.senderAddress.street,
+    city: invoice.senderAddress.city,
+    postCode: invoice.senderAddress.postCode,
+    country: invoice.senderAddress.country,
+  };
+
+  const clientAddress: AddressT = {
+    street: invoice.clientAddress.street,
+    city: invoice.clientAddress.city,
+    postCode: invoice.clientAddress.postCode,
+    country: invoice.clientAddress.country,
+  };
+
+  const items = invoice.items.map((item: ItemT) => {
+    return {
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      total: item.total,
+    };
+  });
+
+  const data = {
+    id: invoice.id,
+    createdAt: invoice.createdAt,
+    paymentDue: invoice.paymentDue,
+    description: invoice.description,
+    paymentTerms: invoice.paymentTerms,
+    clientName: invoice.clientName,
+    clientEmail: invoice.clientEmail,
+    status: invoice.status,
+    senderAddress: senderAddress,
+    clientAddress: clientAddress,
+    items: items,
+    total: invoice.total,
+  };
+
+  return res.status(200).json(data);
+};
+
 export const createInvoice = async (req: Request, res: Response) => {
   const { body } = req;
 
